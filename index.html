@@ -86,14 +86,20 @@
       }
 
       // Use CORS proxy for blocked URLs
-      if (gameUrl && (gameUrl.includes("w3schools.com") || gameUrl.includes("edgesuite"))) {
+      if (gameUrl.includes("w3schools.com") || gameUrl.includes("edgesuite")) {
         // Use public CORS proxy service (allorigins.win - still active and reliable)
         gameUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(gameUrl);
       }
     }
 
-    a.href = gameUrl;
-    a.target = "_blank";
+    // Use onClick to prevent default file:// resolution
+    a.href = "#";
+    a.onclick = (e) => {
+      e.preventDefault();
+      if (gameUrl) {
+        window.open(gameUrl, "_blank");
+      }
+    };
 
     const img = document.createElement("img");
     img.src = game.img || "/images/noimg.png";
