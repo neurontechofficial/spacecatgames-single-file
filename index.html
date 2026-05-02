@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Cat Games</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0f0f14;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .game {
+      background: #1a1a22;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.1s ease, background 0.2s;
+    }
+
+    .game:hover {
+      background: #262633;
+      transform: scale(1.05);
+    }
+
+    .game img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    .title {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🐈‍⬛ Space Cat Games</h1>
+<div id="games" class="grid"></div>
+
+<script>
+  const API_URL = "https://spacecatgame.netlify.app/api/games.json";
+  const container = document.getElementById("games");
+
+  // Preload image (forces browser to download/cache it)
+  function preloadImage(src) {
+    const img = new Image();
+    img.src = src;
+  }
+
+  // Create a game card
+  function createGameCard(game) {
+    const a = document.createElement("a");
+    a.className = "game";
+    a.href = game.url;
+    a.target = "_blank";
+
+    const img = document.createElement("img");
+    img.src = game.img || "/images/noimg.png";
+    img.alt = game.alt || game.title;
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = game.title;
+
+    a.appendChild(img);
+    a.appendChild(title);
+
+    return a;
+  }
+
+  // Load games
+  async function loadGames() {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      if (!data.games) throw new Error("Invalid API format");
+
+      data.games.forEach(game => {
+        // preload image (download/cache)
+        if (game.img) preloadImage(game.img);
+
+        const card = createGameCard(game);
+        container.appendChild(card);
+      });
+
+    } catch (err) {
+      console.error(err);
+      container.innerHTML = "<p>Failed to load games.</p>";
+    }
+  }
+
+  loadGames();
+</script>
+
+</body>
+</html>
