@@ -92,12 +92,12 @@
       }
     }
 
-    // Use onClick to prevent default file:// resolution
+    // Use onClick to load game in current window
     a.href = "#";
     a.onclick = (e) => {
       e.preventDefault();
       if (gameUrl) {
-        window.open(gameUrl, "_blank");
+        window.location.href = gameUrl;
       }
     };
 
