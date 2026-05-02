@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Cat Games</title>
+  <title>Space Cat Games - Single File</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
@@ -56,7 +56,8 @@
 </head>
 <body>
 
-<h1>🐈‍⬛ Space Cat Games</h1>
+<h1>Space Cat Games - Single File</h1>
+<p></p>
 <div id="games" class="grid"></div>
 
 <script>
@@ -73,7 +74,15 @@
   function createGameCard(game) {
     const a = document.createElement("a");
     a.className = "game";
-    a.href = game.url;
+
+    // Use CORS proxy for blocked URLs
+    let gameUrl = game.url;
+    if (gameUrl && (gameUrl.includes("w3schools.com") || gameUrl.includes("edgesuite"))) {
+      // Use public CORS proxy service (allorigins.win - still active and reliable)
+      gameUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(gameUrl);
+    }
+
+    a.href = gameUrl;
     a.target = "_blank";
 
     const img = document.createElement("img");
