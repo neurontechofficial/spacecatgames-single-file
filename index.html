@@ -57,6 +57,7 @@
 <body>
 
 <h1>Space Cat Games - Single File</h1>
+<p><em>It is currenly normal for games to be missing images.</em></p>
 <p></p>
 <div id="games" class="grid"></div>
 
@@ -75,11 +76,20 @@
     const a = document.createElement("a");
     a.className = "game";
 
-    // Use CORS proxy for blocked URLs
+    // Convert relative URLs to absolute URLs
     let gameUrl = game.url;
-    if (gameUrl && (gameUrl.includes("w3schools.com") || gameUrl.includes("edgesuite"))) {
-      // Use public CORS proxy service (allorigins.win - still active and reliable)
-      gameUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(gameUrl);
+    if (gameUrl) {
+      // If URL is relative (doesn't start with http:// or https://), make it absolute
+      if (!gameUrl.startsWith("http://") && !gameUrl.startsWith("https://")) {
+        // Assuming relative paths are from the spacecatgame API domain
+        gameUrl = "https://spacecatgame.netlify.app" + (gameUrl.startsWith("/") ? gameUrl : "/" + gameUrl);
+      }
+
+      // Use CORS proxy for blocked URLs
+      if (gameUrl && (gameUrl.includes("w3schools.com") || gameUrl.includes("edgesuite"))) {
+        // Use public CORS proxy service (allorigins.win - still active and reliable)
+        gameUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent(gameUrl);
+      }
     }
 
     a.href = gameUrl;
